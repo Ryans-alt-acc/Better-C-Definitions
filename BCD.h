@@ -23,7 +23,7 @@ void *brealloc(void *ptr, size_t size);//realloc but with automatic memory safeg
 void bfree(void *ptr);//URGENT: do NOT pass NULL accidently. it will free ALL your arena tracked pointers. basicly the free function, but iff you pass null to it it frees all the tracked pointers
 void arena_track(void *ptr);//puts pointers into the arena list, dont need to do anythşng if you use BCD memory functions
 void arena_free_all(void);//frees all pointers in arena, dont need to do anything if you just put null into bfree
-
+void arena_track_realloc(void *oldptr, void *newptr);//arena track for brealloc
 /* I/O */
 char *ReadStringFromUser(size_t cap);//reads string from user, returns pointer to character array ReadStringFromUSer(size_T cap);
 void swap_int(int *a, int *b); //swaps 2 intigers. swap_int(int *a, int *b);
