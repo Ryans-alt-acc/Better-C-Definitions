@@ -13,11 +13,14 @@ void rng_init(void) {
 }
 
 int random_int(int min, int max) {
-    rng_init(); // safe guard: ensures seeded once
+    rng_init(); // fixed seeding thingy
     return min + rand() % (max - min + 1);
 }
 
 //memory 
+static void **arena_list = NULL;
+static size_t arena_cap = 0;
+static size_t arena_len = 0;
 
 void *balloc(size_t size) {
     void *ptr = malloc(size);
@@ -25,6 +28,7 @@ void *balloc(size_t size) {
         fprintf(stderr, "balloc: out of memory\n");
         exit(EXIT_FAILURE);
     }
+    arena_track(ptr);
     return ptr;
 }
 
@@ -34,6 +38,7 @@ void *bcalloc(size_t count, size_t size) {
         fprintf(stderr, "bcalloc: out of memory\n");
         exit(EXIT_FAILURE);
     }
+    arena_track(ptr);
     return ptr;
 }
 
@@ -48,12 +53,35 @@ void *brealloc(void *ptr, size_t size) {
         fprintf(stderr, "brealloc: out of memory\n");
         exit(EXIT_FAILURE);
     }
+    arena_track(ptr);
     return new_ptr;
 }
 
 void bfree(void *ptr) {
+    if (ptr == NULL)
+    {
+        arena_free_all();
+    }
+    
     free(ptr);
 }
+
+void arena_track(void *ptr) { 
+    if (arena_len >= arena_cap) {
+        arena_cap = arena_cap == 0 ? 32 : arena_cap * 2;
+        arena_list = realloc(arena_list, arena_cap * sizeof(void*)); 
+    }
+    arena_list[arena_len++] = ptr;
+}
+void arena_free_all(void) {
+    for (size_t i = 0; i < arena_len; i++) {
+        free(arena_list[i]);
+    }
+    free(arena_list);
+    arena_list = NULL;
+    arena_len = arena_cap = 0;
+}
+
 
 //input output
 
