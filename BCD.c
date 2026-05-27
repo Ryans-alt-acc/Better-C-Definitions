@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 
-/* ================= RNG ================= */
+//randomness
 
 void rng_init(void) {
     static BOOL seeded = FALSE;
@@ -17,7 +17,7 @@ int random_int(int min, int max) {
     return min + rand() % (max - min + 1);
 }
 
-/* ================= MEMORY ================= */
+//memory 
 
 void *balloc(size_t size) {
     void *ptr = malloc(size);
@@ -55,7 +55,7 @@ void bfree(void *ptr) {
     free(ptr);
 }
 
-/* ================= I/O ================= */
+//input output
 
 char *ReadStringFromUser(size_t cap) {
     char *buf = balloc(cap);
@@ -75,7 +75,7 @@ char *ReadStringFromUser(size_t cap) {
     return brealloc(buf, len + 1);
 }
 
-/* ================= HELPERS ================= */
+//macros and such
 
 void swap_int(int *a, int *b) {
     int tmp = *a;
